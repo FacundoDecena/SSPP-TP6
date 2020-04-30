@@ -11,6 +11,7 @@ int main(int argc, char** argv) {
         MPI_Status status;
         int size;
         int rank;
+        int i;
 
         MPI_Init(&argc, &argv);
 
@@ -24,7 +25,7 @@ int main(int argc, char** argv) {
         if(rank == 0){
             printf("Hola, soy el proceso 0 (hay %d procesos) y recibo: ", size);
 
-            for(int i = 1; i < size; i++){
+            for(i = 1; i < size; i++){
                 MPI_Recv(message, MESSAGE_SIZE, MPI_CHAR, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
                 printf("%s", message);
             }
