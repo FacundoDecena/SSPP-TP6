@@ -1,5 +1,6 @@
 #include <mpi.h>
 #include <stdio.h>
+#include <string.h>
 
 int main(int argc, char** argv) {
 int MESSAGE_SIZE = 500;
@@ -23,7 +24,7 @@ int MESSAGE_SIZE = 500;
         MPI_Get_processor_name(processor_name, &name_len);
 
         if(world_rank == 0){
-            strcpy(message, "Hola, soy el proceso 0 (hay %d procesos) y recibo:", world_size);
+            strcpy(message, "Hola, soy el proceso 0 (hay %d procesos) y recibo:");
             MPI_Send(message, strlen(message), MPI_CHAR, world_rank++, 99, MPI_COMM_WORLD);
         } else{
             MPI_Recv(message, 20, MPI_CHAR, 0, 99, MPI_COMM_WORLD, &status);
