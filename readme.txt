@@ -1,0 +1,1 @@
+mpirun -np 16 -f ./hostfile ./main
