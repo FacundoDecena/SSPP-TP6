@@ -2,29 +2,39 @@
 #include <stdio.h>
 
 int main(int argc, char** argv) {
-// Initialize the MPI environment. The two arguments to MPI Init are not
-// currently used by MPI implementations, but are there in case future
-// implementations might need the arguments.
-printf("Hola, soy el proceso 0 (hay “n” procesos) y recibo:\n");
-MPI_Init(NULL, NULL);
+int MESSAGE_SIZE = 500;
+    {
+        char message[MESSAGE_SIZE];
+        MPI_Status status;
 
-// Get the number of processes
-int world_size;
-MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+        MPI_Init(NULL, NULL);
 
-// Get the rank of the process
-int world_rank;
-MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+        // Get the number of processes
+        int world_size;
+        MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
-// Get the name of the processor
-char processor_name[MPI_MAX_PROCESSOR_NAME];
-int name_len;
-MPI_Get_processor_name(processor_name, &name_len);
+        // Get the rank of the process
+        int world_rank;
+        MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-// Print off a hello world message
-printf("Saludos desde el proceso #%s al proceso 0\n",
-processor_name);
+        // Get the name of the processor
+        char processor_name[MPI_MAX_PROCESSOR_NAME];
+        int name_len;
+        MPI_Get_processor_name(processor_name, &name_len);
 
-// Finalize the MPI environment. No more MPI calls can be made after this
-MPI_Finalize();
+        if(world_rank == 0){
+            strcpy(message, "Hola, soy el proceso 0 (hay %d procesos) y recibo:", world_size);
+            MPI_Send(message, strlen(message), MPI_CHAR, world_rank++, 99, MPI_COMM_WORLD);
+        } else{
+            MPI_Recv(message, 20, MPI_CHAR, 0, 99, MPI_COMM_WORLD, &status);
+            printf("Hola, saludos desde el proceso %d :%s:\n", world_rank, message);
+            MPI_Send(message, strlen(message), MPI_CHAR, world_rank++, 99, MPI_COMM_WORLD);
+        }
+        // Print off a hello world message
+        printf("Hello world from processor %s, rank %d out of %d processors\n",
+        processor_name, world_rank, world_size);
+
+        // Finalize the MPI environment. No more MPI calls can be made after this
+        MPI_Finalize();
+    }
 }
