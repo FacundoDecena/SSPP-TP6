@@ -33,8 +33,15 @@ void getSubMatrix(int *matrix, int *destination, int start, int finish){
 }
 
 int main(int argc, char** argv){
-
-    int size, rank, i, matLength, subMatLength, colLength, index, control;
+    /**
+     * size = #Cores
+     * rank = specific core
+     * matLength = #numbers in the matrix.
+     * subMatLength = #cores * #number in a row
+     * rowLength = #number in a row (same than columns)
+     * i, index and control are for loops.
+     */
+    int size, rank, i, matLength, subMatLength, rowLength, index, control;
 
     if (argc != 2){
         printf("Cantidad de argumentos erronea");
@@ -49,63 +56,77 @@ int main(int argc, char** argv){
     // Get the rank of the process
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    colLength = atoi(argv[1]);
-    matLength = colLength * colLength;
-    subMatLength = colLength * size;
+    // Setting "execution constants"
+    rowLength = atoi(argv[1]);
+    matLength = rowLength * rowLength;
+    subMatLength = rowLength * size;
 
+    // Allocating memory
+    // Matrix for multiply
     int *matrix = (int *)malloc(sizeof(int) * matLength);
-    int *vector = (int *)malloc(sizeof(int) * colLength);
+    // Vector for multiply
+    int *vector = (int *)malloc(sizeof(int) * rowLength);
+    // Slice of matrix that current cores can handle at the same time
     int *subMatrix = (int *)malloc(sizeof(int) * subMatLength);
     // For each process create a buffer to hold the respective column
-    int *column = (int *)malloc(sizeof(int) * colLength);
+    int *column = (int *)malloc(sizeof(int) * rowLength);
+    // Controls which number are printed at the end
     control = 0;
     //Initialize the matrix and vector to multiply
     if (rank == 0){
         for(i = 0; i < matLength; i++){
             matrix[i] = i + 1;
         }
-        for(i = 0; i < colLength; i++){
+        for(i = 0; i < rowLength; i++){
             vector[i] = i + 1;
         }
-        printf("El vector resultado es: \n");
+        printf("El vector resultado es: \n[\n");
     }
-    int *sub_total = NULL;
-    MPI_Bcast(vector, colLength, MPI_INT, 0, MPI_COMM_WORLD);
-    for (index = 0; index <  matLength - 1; index += subMatLength){
+    // Space for the parcial results
+    int *subTotal = NULL;
+
+    //Shares the content of vector with other cores
+    MPI_Bcast(vector, rowLength, MPI_INT, 0, MPI_COMM_WORLD);
+
+    // Repeats until all the matrix has been multiplied with the vector
+    for (index = 0; index <  matLength ; index += subMatLength){
+
+        // gets the slice of the matrix with which processors can operate
         getSubMatrix(matrix, subMatrix, index, index + subMatLength);
-        // Divide in columns
-        MPI_Scatter(subMatrix, colLength, MPI_INT, column, colLength, MPI_INT, 0, MPI_COMM_WORLD);
-        // Share the vector
+        // Divides the rows between all processors
+        MPI_Scatter(subMatrix, rowLength, MPI_INT, column, rowLength, MPI_INT, 0, MPI_COMM_WORLD);
 
-        int res = multiply(column, vector, colLength);
+        // Each processor calculates the row * vector
+        int res = multiply(column, vector, rowLength);
 
+        // Only the process 0 needs to be not null
         if (rank == 0) {
-            sub_total = (int *) malloc(sizeof(int) * size);;
+            subTotal = (int *) malloc(sizeof(int) * size);;
         }
 
-        MPI_Gather(&res, 1, MPI_INT, sub_total, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        // The processor 0 gathers all the partials results and saves them in sub_total
+        MPI_Gather(&res, 1, MPI_INT, subTotal, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
+        // Prints the result
         if (rank == 0) {
             for (i = 0; i < size; i++) {
+                if (control < rowLength)
+                    printf("%d \n", subTotal[i]);
                 control++;
-                if (control < colLength)
-                    printf("%d \n", sub_total[i]);
             }
         }
     }
-
-    // Cleaning memory
-
     if(rank == 0){
+        printf("]\n");
+
+        // Cleaning memory
         free(matrix);
         free(subMatrix);
         free(vector);
-        free(sub_total);
+        free(subTotal);
     }
     free(column);
 
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
-
 }
-
