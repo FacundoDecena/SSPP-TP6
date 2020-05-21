@@ -12,4 +12,4 @@ clean:
 	$(RM) ./build/*
 
 run:
-	mpirun -np $(np) ./build/ejercicio4
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio4

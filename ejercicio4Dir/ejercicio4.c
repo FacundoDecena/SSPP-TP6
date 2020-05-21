@@ -1,4 +1,4 @@
-#include <mpi/mpi.h>
+#include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     int world_size = 0, flag, universe_sizep, universe_size;
 
-    char worker_program[10] = "./worker";
+    char worker_program[14] = "./build/worker";
 
     MPI_Init(&argc, &argv);
     
