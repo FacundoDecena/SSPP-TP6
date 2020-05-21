@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
     MPI_Comm_remote_size(parent, &size);
 
-    printf("I'm tikito!!\n");
+    printf("I'm a child!!\n");
 
     if (size != 1)
         error("Something's wrong with the parent");
