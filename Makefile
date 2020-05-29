@@ -55,3 +55,12 @@ ejercicio.4:
 
 ejercicio.4.run:
 	mpirun -np 1 -f ./hostfile ./build/ejercicio4
+
+ejercicio.5:
+	mpicc -g -std=c99 -Wall -o ./build/ejercicio5a ejercicio5/basico.c
+
+ejercicio.5.localRun:
+	mpirun -np 2 ./build/ejercicio5a
+
+ejercicio.5.run:
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio5a
