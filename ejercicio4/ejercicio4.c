@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     int world_size = 0, flag, universe_sizep, universe_size;
 
-    char worker_program[14] = "./build/worker";
+    char worker_program[15] = "../build/worker";
 
     MPI_Init(&argc, &argv);
     

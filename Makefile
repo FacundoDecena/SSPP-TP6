@@ -47,3 +47,11 @@ ejercicio.3.localRun:
 ejercicio.3.run:
 	mpirun -np $(np) -f ./hostfileE3 ./build/ejercicio3a
 	mpirun -np $(np) -f ./hostfileE3 ./build/ejercicio3b $(mult)
+
+ejercicio.4:
+	mpicc -o ./build/ejercicio4 ejercicio4/ejercicio4.c
+
+	mpicc -o ./build/worker ejercicio4/worker.c
+
+ejercicio.4.run:
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio4
