@@ -24,3 +24,12 @@ ejercicio.1.run:
 	mpirun -np $(np) -f ./hostfile ./build/ejercicio1B
 	mpirun -np $(np) -f ./hostfile ./build/ejercicio1C
 	mpirun -np $(np) -f ./hostfile ./build/ejercicio1D
+
+ejercicio.2:
+	mpicc -o ./build/ejercicio2 ./ejercicio2/ejercicio2.c
+
+ejercicio.2.localRun:
+	mpirun -np $(npl) ./build/ejercicio2
+
+ejercicio.2.run:
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio2
