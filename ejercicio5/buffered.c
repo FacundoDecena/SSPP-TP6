@@ -7,6 +7,8 @@ char **argv;
 {
     int myrank;
     char message[14];
+    char bmessage[14];
+    int bufsize, bbsize;
 
     MPI_Request request;
     MPI_Status status;
@@ -15,9 +17,12 @@ char **argv;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
 
+    MPI_Pack_size(14, MPI_CHAR, MPI_COMM_WORLD, &bufsize);
+    bufsize += MPI_BSEND_OVERHEAD;
+    MPI_Buffer_attach(message, bufsize);
+
     if (myrank == 0)
     {
-        MPI_Buffer_attach(message, 14*sizeof(char) + MPI_BSEND_OVERHEAD);
         strcpy(message, "Hello, world");
         MPI_Bsend(message, 13, MPI_CHAR, 1, 99, MPI_COMM_WORLD);
     }
@@ -39,9 +44,10 @@ char **argv;
         MPI_Irecv(message, 14, MPI_CHAR, 0, 123, MPI_COMM_WORLD, &request);
         MPI_Wait(&request, &status);
         printf("noBloqueante recibido: %s\n\n", message);
-        MPI_Buffer_detach(&message, (int *)(14*sizeof(char) + MPI_BSEND_OVERHEAD));
     }
 
+
+    MPI_Buffer_detach(&bmessage, &bbsize);
     MPI_Finalize();
     return 0;
 }
