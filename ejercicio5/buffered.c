@@ -17,7 +17,7 @@ char **argv;
 
     if (myrank == 0)
     {
-        MPI_Buffer_attach(message, 13);
+        MPI_Buffer_attach(message, MPI_BSEND_OVERHEAD);
         strcpy(message, "Hello, world");
         MPI_Bsend(message, 13, MPI_CHAR, 1, 99, MPI_COMM_WORLD);
     }
