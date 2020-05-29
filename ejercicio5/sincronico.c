@@ -36,10 +36,9 @@ char **argv;
     else
     {
         MPI_Irecv(message, 14, MPI_CHAR, 0, 123, MPI_COMM_WORLD, &request);
+        MPI_Wait(&request, &status);
+        printf("noBloqueante recibido: %s\n\n", message);
     }
-
-    MPI_Wait(&request, &status);
-    printf("noBloqueante recibido: %s\n", message);
 
     MPI_Finalize();
     return 0;
