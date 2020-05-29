@@ -5,21 +5,43 @@
 int main(argc, argv) int argc;
 char **argv;
 {
-    char message[20];
     int myrank;
+    char message[14];
+
+    MPI_Request request;
     MPI_Status status;
+
     MPI_Init(&argc, &argv);
+
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
-    if (myrank == 0) /* código para proceso cero */
+
+    if (myrank == 0)
     {
         strcpy(message, "Hello, world");
-        MPI_Send(message, strlen(message), MPI_CHAR, 1, 99,
+        MPI_Send(message, 13, MPI_CHAR, 1, 99,
                  MPI_COMM_WORLD);
     }
-    else /* código para el proceso 1*/
+    else
     {
-        MPI_Recv(message, 20, MPI_CHAR, 0, 99, MPI_COMM_WORLD, &status);
-        printf("recibido :%s:\n", message);
+        MPI_Recv(message, 13, MPI_CHAR, 0, 99, MPI_COMM_WORLD, &status);
+        printf("bloqueante recibido :%s:\n", message);
     }
+
+
+
+    if (myrank == 0)
+    {
+        strcpy(message, "Hello, world!");
+        MPI_Isend(message, 14, MPI_CHAR, 1, 123, MPI_COMM_WORLD, &request);
+    }
+    else
+    {
+        MPI_Irecv(message, 14, MPI_CHAR, 0, 123, MPI_COMM_WORLD, &request);
+    }
+
+    MPI_Wait(&request, &status);
+    printf("noBloqueante recibido: %s\n", message);
+
     MPI_Finalize();
+    return 0;
 }
