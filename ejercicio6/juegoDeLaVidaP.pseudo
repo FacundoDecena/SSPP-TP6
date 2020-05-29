@@ -1,0 +1,59 @@
+import mpi.h
+
+set const N = 500
+set const ALIVE = 1
+set const DEAD = 0
+
+struct Celula{
+    vecinos: vector(8)
+    estado: ALIVE | DEAD
+}
+
+set tablero = matrix(Celula, N * N)
+
+function nextState(row Vector) {
+    
+    foreach (celula in rows) {
+        set suma = Suma(celula.vecinos)
+
+        if (celula.estado) {
+            if (suma < 2 || suma > 3)
+                celula.estado = DEAD
+        } else {
+            if (suma == 3)
+                celula.estado = ALIVE
+        }
+    }
+    
+}
+
+function main(argc int, argv char**){
+
+    set rank int
+    set vecindario MPI_Comm;
+
+    init(tablero)
+
+    MPI_Init(&argc, &argv)
+    
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank)
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+
+    set right = (rank + 1) % numprocs;
+    set left = rank - 1;
+    if (left < 0)
+        left = numprocs - 1;
+
+
+    for (1000) {
+
+        let self = myRow(rank)
+        MPI_Scatter(self, len(self), MPI_INT, row, len(row), MPI_INT, 0, vecindario);
+        foreach(row Vector in tablero) {
+            nextState(row)
+        }
+        MPI_Gather(tablero, len(tablero), MPI_INT, tablero, len(tablero), MPI_INT, 0, vecindario);
+        show(tablero)
+    }
+}

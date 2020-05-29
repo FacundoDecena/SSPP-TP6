@@ -1,0 +1,32 @@
+set const N = 500
+set const ALIVE = 1
+set const DEAD = 0
+
+struct Celula{
+    vecinos: vector(8)
+    estado: ALIVE | DEAD
+}
+
+set tablero = matrix(Celula, N * N)
+
+function nextState(celula Celula) {
+    set suma = Suma(celula.vecinos)
+
+    if (celula.estado) {
+        if (suma < 2 || suma > 3)
+            celula.estado = DEAD
+    } else {
+        if (suma == 3)
+            celula.estado = ALIVE
+    }
+}
+
+function main(){
+    init(tablero);
+    for (1000) {
+        foreach(celula Celula : tablero) {
+            nextState(celula)
+        }
+        show(tablero)
+    }
+}
