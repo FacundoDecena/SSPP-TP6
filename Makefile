@@ -18,3 +18,9 @@ ejercicio.1.localRun:
 	mpirun -np $(npl) ./build/ejercicio1B
 	mpirun -np $(npl) ./build/ejercicio1C
 	mpirun -np $(npl) ./build/ejercicio1D
+
+ejercicio.1.run:
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio1A
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio1B
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio1C
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio1D
