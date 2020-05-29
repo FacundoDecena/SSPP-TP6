@@ -54,4 +54,4 @@ ejercicio.4:
 	mpicc -o ./build/worker ejercicio4/worker.c
 
 ejercicio.4.run:
-	mpirun -np $(np) -f ./hostfile ./build/ejercicio4
+	mpirun -np 1 -f ./hostfile ./build/ejercicio4
