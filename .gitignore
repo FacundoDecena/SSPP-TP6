@@ -1,12 +1,2 @@
-*.xml
-*.iml
-helloWorld
-helloWorldB
-helloWorldC
-helloWorldD
-ejercicio2
-ejercicio3a
-ejercicio3b1
-ejercicio3b2
-cmake-build-debug/
 build/
+readme.txt
