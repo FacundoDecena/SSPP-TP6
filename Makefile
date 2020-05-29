@@ -61,10 +61,12 @@ ejercicio.5:
 
 	mpicc -g -std=c99 -Wall -o ./build/ejercicio5b ejercicio5/sincronico.c
 
+	mpicc -g -std=c99 -Wall -o ./build/ejercicio5c ejercicio5/buffered.c
+
 ejercicio.5.localRun:
 	mpirun -np 2 ./build/ejercicio5a
 	mpirun -np 2 ./build/ejercicio5b
-
+	mpirun -np 2 ./build/ejercicio5c
 ejercicio.5.run:
 	mpirun -np 2 -f ./hostfile ./build/ejercicio5a
 	mpirun -np 2 -f ./hostfile ./build/ejercicio5b
