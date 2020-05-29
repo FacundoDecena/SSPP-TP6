@@ -32,6 +32,7 @@ char **argv;
     if (myrank == 0)
     {
         MPI_Buffer_detach(&message, MPI_BSEND_OVERHEAD);
+        MPI_Buffer_attach(message, MPI_BSEND_OVERHEAD);
         strcpy(message, "Hello, world!");
         MPI_Ibsend(message, 14, MPI_CHAR, 1, 123, MPI_COMM_WORLD, &request);
     }
@@ -40,6 +41,7 @@ char **argv;
         MPI_Irecv(message, 14, MPI_CHAR, 0, 123, MPI_COMM_WORLD, &request);
         MPI_Wait(&request, &status);
         printf("noBloqueante recibido: %s\n\n", message);
+        MPI_Buffer_detach(&message, MPI_BSEND_OVERHEAD);
     }
 
     MPI_Finalize();
