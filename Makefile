@@ -1,8 +1,9 @@
 # Build Executable
 SHELL=/bin/bash
-# Overrides command line arguments
+# constants
 np = 16
 npl = 6
+mult = 13
 
 clean:
 	$(RM) ./build/*
@@ -33,3 +34,16 @@ ejercicio.2.localRun:
 
 ejercicio.2.run:
 	mpirun -np $(np) -f ./hostfile ./build/ejercicio2
+
+ejercicio.3:
+	mpicc -g -std=c99 -Wall -o ./build/ejercicio3a ejercicio3/ejercicio3a.c
+
+	mpicc -g -std=c99 -Wall -o ./build/ejercicio3b ejercicio3/ejercicio3b.c
+
+ejercicio.3.localRun:
+	mpirun -np $(npl) ./build/ejercicio3a
+	mpirun -np $(npl) ./build/ejercicio3b $(mult)
+
+ejercicio.3.run:
+	mpirun -np $(np) -f ./hostfileE3 ./build/ejercicio3a
+	mpirun -np $(np) -f ./hostfileE3 ./build/ejercicio3b $(mult)
