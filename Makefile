@@ -57,22 +57,14 @@ ejercicio.4.run:
 	mpirun -np 1 -f ./hostfile ./build/ejercicio4
 
 ejercicio.5:
-	mpicc -g -std=c99 -Wall -o ./build/ejercicio5a ejercicio5/basico.c
+	mpicc -o ./build/ejercicio5 ./ejercicio5/ejercicio5.c
+	mpicc -o ./build/ejercicio5b ./ejercicio5/ejercicio5b.c
 
-	mpicc -g -std=c99 -Wall -o ./build/ejercicio5b ejercicio5/sincronico.c
-
-	mpicc -g -std=c99 -Wall -o ./build/ejercicio5c ejercicio5/buffered.c
-
-	mpicc -g -std=c99 -Wall -o ./build/ejercicio5d ejercicio5/ready.c
 
 ejercicio.5.localRun:
-	mpirun -np 2 ./build/ejercicio5a
-	mpirun -np 2 ./build/ejercicio5b
-	mpirun -np 2 ./build/ejercicio5c
-	mpirun -np 2 ./build/ejercicio5d
+	mpirun -np $(npl) ./build/ejercicio5
+	mpirun -np $(npl) ./build/ejercicio5b
 
 ejercicio.5.run:
-	mpirun -np 2 -f ./hostfile ./build/ejercicio5a
-	mpirun -np 2 -f ./hostfile ./build/ejercicio5b
-	mpirun -np 2 -f ./hostfile ./build/ejercicio5c
-	mpirun -np 2 -f ./hostfile ./build/ejercicio5d
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio5
+	mpirun -np $(np) -f ./hostfile ./build/ejercicio5b
