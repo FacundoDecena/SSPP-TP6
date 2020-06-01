@@ -62,9 +62,13 @@ ejercicio.5:
 
 
 ejercicio.5.localRun:
+	# Uso de Bcast y Barrier
 	mpirun -np $(npl) ./build/ejercicio5
+	# Uso de Scatter y Gather
 	mpirun -np $(npl) ./build/ejercicio5b
 
 ejercicio.5.run:
+	# Uso de Bcast y Barrier
 	mpirun -np $(np) -f ./hostfile ./build/ejercicio5
+	# Uso de Scatter y Gather
 	mpirun -np $(np) -f ./hostfile ./build/ejercicio5b
