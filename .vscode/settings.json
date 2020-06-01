@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "system_error": "c",
-        "random": "c"
+        "random": "c",
+        "algorithm": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     }
 }
